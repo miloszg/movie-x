@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import Footer from './components/Layout/Footer'
 import Header from './components/Layout/Header'
 import MovieContent from './components/modules/MovieContent'
+import { Routes, Route } from 'react-router-dom'
+import Homepage from './components/modules/Homepage'
 
 const Container = styled.div`
     background-color: #ccc;
@@ -21,7 +23,11 @@ function App() {
         <Container>
             <Header />
             <Main>
-                <MovieContent />
+                <Routes>
+                    <Route index path="/" element={<Homepage />} />
+                    <Route path="/movie/:id" element={<MovieContent />} />
+                    <Route path="*" element={<>lole 404</>} />
+                </Routes>
             </Main>
             <Footer />
         </Container>

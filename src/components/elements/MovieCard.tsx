@@ -1,12 +1,15 @@
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { MovieDetails } from '../../interfaces/MovieDetail'
+import { movieRoute } from '../../utils/routes'
 import { getImageLink, getYearFromDate } from '../../utils/utils'
 
 interface Props {
     movie: MovieDetails
 }
 
-const Container = styled.div`
+const Container = styled(Link)`
+    all: unset;
     display: grid;
     place-content: center;
     width: 200px;
@@ -30,7 +33,7 @@ const Container = styled.div`
 
 const MovieCard = ({ movie }: Props) => {
     return (
-        <Container>
+        <Container to={movieRoute(movie.id)}>
             <img src={getImageLink(movie.poster_path)} alt={`movie ${movie.title} poster`} height={250} width={200} />
             <h3>{movie.title}</h3>
             <h4>{getYearFromDate(movie.release_date)}</h4>

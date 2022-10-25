@@ -4,6 +4,8 @@ import TreningIcon from '../../assets/trending.svg'
 import StarIcon from '../../assets/star.svg'
 import styled from 'styled-components'
 import theme from '../../utils/theme'
+import useToggle from '../../utils/hooks/useToggle'
+import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 
 interface Props {
     movieDetails: MovieDetailsInterface
@@ -60,10 +62,26 @@ const Container = styled.div`
             }
         }
     }
+    @media (max-width: 750px) {
+        max-width: 100%;
+        display: flex;
+        flex-direction: column; //column-reverse;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        .stats {
+            order: 0;
+        }
+        // img { ...
+        & > img {
+            order: 1;
+        }
+    }
 `
 
 const MovieDetails = ({ movieDetails }: Props) => {
     const { poster_path, title, vote_average, popularity, overview, release_date, revenue, runtime } = movieDetails
+    const [showDialog, toggleDialog] = useToggle(false)
 
     return (
         <Container>
@@ -74,6 +92,9 @@ const MovieDetails = ({ movieDetails }: Props) => {
                     <h2>{vote_average}</h2>
                     <img src={TreningIcon} alt="trending icon" />
                     <h2>{popularity}</h2>
+                    <h2 onClick={toggleDialog} style={{ color: theme.colors.yellow, cursor: 'pointer' }}>
+                        Vote now!
+                    </h2>
                 </div>
                 <h3>Description</h3>
                 <span className="synopsis">{overview}</span>
@@ -84,6 +105,12 @@ const MovieDetails = ({ movieDetails }: Props) => {
                 <h3>Box Office</h3>
                 <p>{formatMoney(revenue)}</p>
             </div>
+            <Dialog open={showDialog} onClose={toggleDialog}>
+                <DialogTitle>{`Lole log in first`}</DialogTitle>
+                <DialogContent>
+                    <p>{`You need to be logged in to vote! >:|`}</p>
+                </DialogContent>
+            </Dialog>
         </Container>
     )
 }

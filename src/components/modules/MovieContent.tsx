@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import MovieService from '../../api/MovieService'
 import { MovieDetails } from '../../interfaces/MovieDetail'
-import theme from '../../utils/theme'
 import { getImageLink } from '../../utils/utils'
-import MovieCard from '../elements/MovieCard'
 import MovieBanner from './MovieBanner'
 import MovieDetailsComponent from './MovieDetails'
+import SimilarMovies from './SimilarMovies'
 
 const MovieContainer = styled.section`
     display: grid;
@@ -35,34 +35,24 @@ const Content = styled.div`
     grid-template-rows: auto 1fr;
 `
 
-const MoviesContainer = styled.div`
-    /* display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 0px; */
-
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-
-    background-color: ${theme.colors.white};
-    padding: 25px;
-`
-
 const MovieContent = () => {
     const [movieDetails, setMovieDetails] = useState<MovieDetails>()
-    const [similarMovies, setSimilarMovies] = useState<MovieDetails[]>()
+
+    const { pathname } = useLocation()
 
     useEffect(() => {
-        MovieService.getDetails(550).then((movie) => {
-            setMovieDetails(movie)
-        })
-        MovieService.getSimilarMovies(550).then((movies) => {
-            setSimilarMovies(movies.splice(0, 15))
-        })
-    }, [])
+        const id = pathname.split('/').pop()
 
-    if (!movieDetails) return <p>Movie not found :/</p>
+        if (!id) return
+        MovieService.getDetails(+id)
+            .then((movie) => {
+                setMovieDetails(movie)
+            })
+            .catch((error) => console.log(error))
+    }, [pathname])
+
+    if (!movieDetails)
+        return <p style={{ height: 500, border: '1px solid red', padding: 200 }}>{`Movie not found for ${pathname}  :/`}</p>
 
     return (
         <MovieContainer
@@ -77,10 +67,7 @@ const MovieContent = () => {
             </Content>
             <MovieDetailsComponent movieDetails={movieDetails} />
             <Content>
-                <h3 style={{ padding: '10px 25px 0px 25px' }}>Similar Movies</h3>
-                <MoviesContainer>
-                    {similarMovies?.length ? similarMovies.map((movie) => <MovieCard movie={movie} />) : 'Loading...'}
-                </MoviesContainer>
+                <SimilarMovies movieId={movieDetails.id} />
             </Content>
         </MovieContainer>
     )

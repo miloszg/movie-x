@@ -12,7 +12,7 @@ const Container = styled.div`
     position: relative;
     h1 {
         position: absolute;
-        bottom: 70px;
+        bottom: 55px;
         left: 30px;
         color: #fff;
         z-index: 1;
@@ -33,6 +33,9 @@ const Container = styled.div`
         top: 0;
         left: 0;
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);
+    }
+    @media (max-width: 750px) {
+        display: none;
     }
 `
 
